@@ -28,17 +28,24 @@ result = es.search(
     body={
   'query':{
     'filtered':{
-      'filter':{'term':{'eventid':'12345'}}
+      'filter':{
+         'bool':{
+            'must':[
+		{'term':{'eventid':'12345'}},
+		{'range':{'@timestamp':{'gt':'now-1w'}}}
+    		]
+	    }
+	}
     }
   },
   'facets':{
     'names_list':{
       'terms':{
-        'field':'name'
+        'field':'name',
+	'size':'50'
       }
     }
   }
 }
 )
 print_hits(result, {'names_list': '%(term)15s: %(count)3d'})
-
